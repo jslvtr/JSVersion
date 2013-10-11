@@ -1,0 +1,4 @@
+#!/bin/bash
+
+dir=$(cd $(dirname "$1"); pwd)/$(basename "$1")
+echo "$dir"

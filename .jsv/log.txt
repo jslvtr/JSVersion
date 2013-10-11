@@ -1,0 +1,3 @@
+Logfile initialized :: 1381501053 :: /Users/jslvtr/Documents/Second Year Applied CS/Computer Systems/JSVersion/.jsv
+Repository initialised :: 1381501053 :: /Users/jslvtr/Documents/Second Year Applied CS/Computer Systems/JSVersion.
+Error creating group (jsvgrp) :: 1381501053.

@@ -20,32 +20,21 @@ repoExists() {
 	exit 1
 }
 usage() {
-	echo "Usage: $0 [group_name]"
+	echo "Usage: $0"
 	exit 3
 }
-if [ $# != 0 ]; then
-	usage
-elif [ -d ".jsv" ]; then
+if [ -d ".jsv" ]; then
 	repoExists
 else
 	tstmp=`date +%s`
 	mkdir ".jsv"
+	mkdir ".jsv/stack"
+	mkdir ".jsv/commits"
 	if [ ! -f ".jsv/log.txt" ]; then
 		touch ".jsv/log.txt"
 		echo "Logfile initialized :: $tstmp :: $PWD/.jsv" >> ".jsv/log.txt"
 	fi
 	echo "Repository initialised"
 	echo "Repository initialised :: $tstmp :: $PWD." >> ".jsv/log.txt"
-	groupname="jsvgrp"
-	if [ "$#" -ne 0 ]; then
-		groupname="$1"
-		touch ".jsv/groupname.txt"
-		echo "$groupname" >> ".jsv/groupname.txt"
-	fi
-	groupadd "$groupname"
-	if [ "$?" -ne "0" ]; then
-		echo "Error creating group ($groupname)"
-		echo "Error creating group ($groupname) :: $tstmp." >> ".jsv/log.txt"
-	fi
 	exit 0
 fi

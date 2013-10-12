@@ -1,3 +1,6 @@
-Logfile initialized :: 1381501053 :: /Users/jslvtr/Documents/Second Year Applied CS/Computer Systems/JSVersion/.jsv
-Repository initialised :: 1381501053 :: /Users/jslvtr/Documents/Second Year Applied CS/Computer Systems/JSVersion.
-Error creating group (jsvgrp) :: 1381501053.
+Logfile initialized :: 1381598741 :: /home/jose/Documents/Year2/Computer Systems/JSVersion/.jsv
+Repository initialised :: 1381598741 :: /home/jose/Documents/Year2/Computer Systems/JSVersion.
+Created diff file .jsv/stack/readme.txt :: 1381598747
+New commit (No commit message) (count:0) :: 1381598762 :: user jose
+Created diff file .jsv/stack/readme.txt :: 1381598763
+New commit (No commit message) (count:1) :: 1381598788 :: user jose

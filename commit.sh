@@ -18,24 +18,26 @@ if [ ! -d ".jsv/stack" ]; then
 	exit 2
 else
 	cd ".jsv"
-	tstmp=`date +%s`
+	tstmp=$(date +%s)
 	touch "stack/$tstmp.message"
 	commitmsg="$1"
-	$default="No commit message"
+	default="No commit message"
 	output=${commitmsg:=$default}
 	echo "$output" > "stack/$tstmp.message"
 
 	### We have all the files to commit inside .jsv/stack.
 	### They belong to user who added them, and have modifier 700.
-	for file in `ls "stack"`; do
+	for file in "stack"; do
 		chmod 775 "$file"
 		chgrp "jsvgrp" "$file"
 	done
-	count=`ls "commits" | wc -w`
-	tar -zcvf "$tstmp.$count.tar.gz" "stack/*"
+	count=$(ls "commits" | wc -w)
+	tar -zcf "$tstmp.$count.tar.gz" -C "stack/" .
 	chgrp "jsvgrp" "$tstmp.$count.tar.gz"
 	chmod 775 "$tstmp.$count.tar.gz"
 	mv "$tstmp.$count.tar.gz" "commits"
-	rm "stack/*"
+	rm -rf "stack"
 	echo "New commit ($output) (count:$count) :: $tstmp :: user $(whoami)" >> "log.txt"
 	exit 0
+fi
+exit 0

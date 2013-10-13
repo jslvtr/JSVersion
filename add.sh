@@ -66,8 +66,9 @@ for file in $filesToAdd; do
 	### We find the last commit: (ls | sort -r | head -1) gives us the latest commit first
 	#	latest=`ls ".jsv/commit" | sort -r`
 	latest=$(ls ".jsv/commits" | sort)
-	
-	touch ".jsv/current.txt"
+	fileDir="$(dirname "$file")/"
+	fileName=$(basename "$file")
+	touch ".jsv/$fileName"
 	for commit in $latest; do
 		### Here we are looping through the commits
 		mkdir ".jsv/temp-commit"
@@ -79,9 +80,9 @@ for file in $filesToAdd; do
 		for commitFile in $commitFiles; do
 			commitFileName=$(basename "$commitFile")
 			commitFileDirectory="$(dirname "$commitFile")/"
-			if [[ "$commitFileName" == $(basename "$file") && "$commitFileDirectory" == $(dirname "$file") ]]; then
+			if [[ "$commitFileName" == $(basename "$file") && "$commitFileDirectory" == $fileDir ]]; then
 				### How to do diff? Do I need to patch all the previous diffs?
-				patch -R ".jsv/current.txt" ".jsv/temp-commit/$commitFileDirectory$commitFileName"
+				patch -R ".jsv/$fileName" ".jsv/temp-commit/$commitFileDirectory$commitFileName"
 			fi	
 		done
 		### Remove the "temp-commit" folder since it is re-made at every iteration of the loop.
@@ -93,15 +94,15 @@ for file in $filesToAdd; do
 	newfile="$newdir/$newfilename"
 	mkdir -p ".jsv/stack/$newdir"
 	touch ".jsv/stack/$newfile"
-	### We calculate the diff with "current.txt". This file could be empty, so the diff would then be all of our file (in the first commit).
-	diff -u "$file" ".jsv/current.txt" >> ".jsv/stack/$newfile"
+	### We calculate the diff with "$fileName.txt". This file could be empty, so the diff would then be all of our file (in the first commit).
+	diff -u "$file" ".jsv/$fileName" >> ".jsv/stack/$newfile"
 	tstmp=$(date +%s)
 	### LOCK THE FILE UNTIL IT GETS COMMITTED
 	chmod 700 ".jsv/stack/$newfile"
 	user=$(whoami)	
 	echo "Created diff file .jsv/stack/$newfile :: $tstmp :: user=$user" >> ".jsv/log.txt"
 	chown "$user" ".jsv/stack/$newfile"
-	### Remove "current.txt" as it is the previous version of the file that is now added to "stack".
-	rm ".jsv/current.txt"
+	### Remove "$fileName.txt" as it is the previous version of the file that is now added to "stack".
+	rm ".jsv/$fileName"
 done
 exit 0

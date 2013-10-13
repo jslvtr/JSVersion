@@ -4,6 +4,7 @@ for user in $*; do
 	gpasswd -d $user $groupname
 done
 deluser --group --only-if-empty "$groupname"
+rm -rf ".jsv"
 if [ "$?" -ne "0" ]; then
 	echo "Error removing group. Maybe you have missed some accounts?"
 	exit 1

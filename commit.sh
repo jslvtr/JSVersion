@@ -43,14 +43,14 @@ else
 	default="No commit message"
 	output=${commitmsg:=$default}
 	echo "$output" > "stack/$tstmp.message"
-
+	groupname=$(cat "groupname.txt")
 	### We have all the files to commit inside .jsv/stack.
 	### They belong to user who added them, and have modifier 700.
 	cd "stack"
 	filesToCommit=$(find * -type f -print)
 	for file in $filesToCommit; do
 		chmod 775 "$file"
-		chgrp "jsvgrp" "$file"
+		chgrp "$groupname" "$file"
 	done
 	cd ".."
 	count=$(ls "commits" | wc -w)
@@ -58,7 +58,7 @@ else
 	find * -type f -print0 -exec tar zcf "$tstmp.$count.tar.gz" {} +
 	cd ".."
 	mv "stack/$tstmp.$count.tar.gz" "."
-	chgrp "jsvgrp" "$tstmp.$count.tar.gz"
+	chgrp "$groupname" "$tstmp.$count.tar.gz"
 	chmod 775 "$tstmp.$count.tar.gz"
 	mv "$tstmp.$count.tar.gz" "commits"
 	rm -rf "stack"

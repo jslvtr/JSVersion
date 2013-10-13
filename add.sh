@@ -88,10 +88,10 @@ for file in "$@"; do
 	### We calculate the diff with "current.txt". This file could be empty, so the diff would then be all of our file (in the first commit).
 	diff -u "$file" ".jsv/current.txt" >> ".jsv/stack/$newfile"
 	tstmp=$(date +%s)
-	echo "Created diff file .jsv/stack/$newfile :: $tstmp" >> ".jsv/log.txt"
 	### LOCK THE FILE UNTIL IT GETS COMMITTED
 	chmod 700 ".jsv/stack/$newfile"
-	user=$(whoami)
+	user=$(whoami)	
+	echo "Created diff file .jsv/stack/$newfile :: $tstmp :: user=$user" >> ".jsv/log.txt"
 	chown "$user" ".jsv/stack/$newfile"
 	### Remove "current.txt" as it is the previous version of the file that is now added to "stack".
 	rm ".jsv/current.txt"

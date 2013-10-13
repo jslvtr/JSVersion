@@ -45,51 +45,65 @@ if [ "$#" -ne "0" ]; then
 fi
 
 askUser
+groupname=$(cat ".jsv/groupname.txt")
+if [ "$?" == "0" ]; then
+	echo "Error getting groupname. Repository corrupted."
+	exit 3
+fi
 
 if [ "$choice" == "2" ]; then
-	### User wants to go back to commit _x_
-	cd ".jsv"
-	mkdir "temp-struct"
-	latest=$(ls "commits" | sort)
+	num="$numCommits"
+elif [ "$choice" == "1" ]; then	
 	count=$(ls "commits" | wc -w)
-	index=0
-	for commit in $latest; do
-		if [ "$index" -lt "$numCommits" ]; then
-			if [ -d "temp-commit" ]; then
-				rm -rf "temp-commit"
-			fi
-			mkdir "temp-commit"
-			tar -zxf "commits/$commit" -C "temp-commit"
-			cd "temp-commit"
-			commitFiles=$(find * -type f -print)
-			cd ".."
-			for commitFile in $commitFiles; do
-				commitFileName=$(basename "$commitFile")
-				commitFileDirectory="$(dirname "$commitFile")/"
-				if [ ! -d "temp-struct/$commitFileDirectory" ]; then
-					mkdir -p "temp-struct/$commitFileDirectory"
-				fi
-				if [ ! -f "temp-struct/$commitFileDirectory$commitFileName" ]; then
-					touch "temp-struct/$commitFileDirectory$commitFileName"
-				fi
-				patch -R "temp-struct/$commitFileDirectory$commitFileName" "temp-commit/$commitFile"
-					
-			done
-		fi
-	let index++
-	done
-	cd ".."
-	toRemove=$(find . -maxdepth 1 ! -name '.*')
-	for tR in $toRemove; do
-		rm -rf "$tR"
-	done
-	cp -rf ".jsv/temp-struct/"* "."
-	rm -rf "temp-struct"
-elif [ "$choice" == "1" ]; then
-	### User wants to go back by _x_ commits
-	echo "Nothing to do here"
+	num=$(expr $count - $numCommits)
 else
 	### User doesn't know what he wants; exit
 	echo "No correct choice selected."
 	exit 2
 fi
+
+cd ".jsv"
+mkdir "temp-struct"
+latest=$(ls "commits" | sort)
+index=0
+for commit in $latest; do
+	if [ "$index" -lt "$num" ]; then
+		if [ -d "temp-commit" ]; then
+			rm -rf "temp-commit"
+		fi
+		mkdir "temp-commit"
+		tar -zxf "commits/$commit" -C "temp-commit"
+		cd "temp-commit"
+		commitFiles=$(find * -type f ! -name '*.message' -print )
+		cd ".."
+		for commitFile in $commitFiles; do
+			commitFileName=$(basename "$commitFile")
+			commitFileDirectory="$(dirname "$commitFile")/"
+			ownerName=$(stat -c %U "temp-commit/$commitFile")
+			if [ ! -d "temp-struct/$commitFileDirectory" ]; then
+				mkdir -p "temp-struct/$commitFileDirectory"
+			fi
+			if [ ! -f "temp-struct/$commitFileDirectory$commitFileName" ]; then
+				touch "temp-struct/$commitFileDirectory$commitFileName"
+				chmod 775 "temp-struct/$commitFileDirectory$commitFileName"
+				chgrp "$groupname" "temp-struct/$commitFileDirectory$commitFileName"
+				chown "$ownerName" "temp-struct/$commitFileDirectory$commitFileName"
+			fi
+			patch -R "temp-struct/$commitFileDirectory$commitFileName" "temp-commit/$commitFile"
+				
+		done
+	fi
+let index++
+done
+rm -rf "temp-commit"
+cd ".."
+toRemove=$(find . -maxdepth 1 ! -name '.*')
+for tR in $toRemove; do
+	rm -rf "$tR"
+done
+cp -rf ".jsv/temp-struct/"* "."
+rm -rf ".jsv/temp-struct"
+user=$(whoami)
+tstmp=$(date +%s)
+echo "Reverted back to commit $num :: $tstmp :: user=$user" >> ".jsv/log.txt"
+exit 0

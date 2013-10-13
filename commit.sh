@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # Name: `commit`
 # Author: Jose Salvatierra (jslvtr)

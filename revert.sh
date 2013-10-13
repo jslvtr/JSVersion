@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # Name: `revert`
 # Author: Jose Salvatierra (jslvtr)
@@ -19,8 +19,10 @@
 #                                                
 
 askUser() {
-	echo "Do you wish to revert by _x_ commits (1) or to commit _x_ (2)?"
+	echo "Do you wish to revert by _x_ commits (1) or to commit _x_ (2)? "
 	read choice
+	echo "How many commits to revert back? // Which commit to revert to? "
+	read numCommits
 }
 
 usage() {
@@ -44,7 +46,7 @@ fi
 
 askUser
 
-if [ "$choice" -e "2" ]; then
+if [ "$choice" == "2" ]; then
 	### User wants to go back to commit _x_
 	cd ".jsv"
 	mkdir "temp-struct"
@@ -52,7 +54,7 @@ if [ "$choice" -e "2" ]; then
 	count=$(ls "commits" | wc -w)
 	index=0
 	for commit in $latest; do
-		if [ "$index" -lt "$choice" ]; then
+		if [ "$index" -lt "$numCommits" ]; then
 			if [ -d "temp-commit" ]; then
 				rm -rf "temp-commit"
 			fi
@@ -81,11 +83,11 @@ if [ "$choice" -e "2" ]; then
 	for tR in $toRemove; do
 		rm -rf "$tR"
 	done
-	cp -rf ".jsv/temp-struct/*" "."
+	cp -rf ".jsv/temp-struct/"* "."
 	rm -rf "temp-struct"
-elif [ "$choice" -e "1" ]; then
+elif [ "$choice" == "1" ]; then
 	### User wants to go back by _x_ commits
-	
+	echo "Nothing to do here"
 else
 	### User doesn't know what he wants; exit
 	echo "No correct choice selected."

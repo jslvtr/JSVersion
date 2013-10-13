@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # Name: `add`
 # Author: Jose Salvatierra (jslvtr)
@@ -42,7 +42,11 @@ usage() {
 ### If we do not have a file passed as an argument, then exit.
 for fil in "$@"; do
 	if [ ! -f "$fil" ]; then
-		usage
+		if [ "$1" != "--all" ]; then
+			usage
+		else
+			allFiles="true"
+		fi
 	fi
 done
 ### If the repository directory doesn't exist, then it hasn't been initialized. Exit.
@@ -54,7 +58,11 @@ fi
 if [ ! -d ".jsv/stack" ]; then
 	mkdir ".jsv/stack"
 fi
-for file in "$@"; do
+filesToAdd="$@"
+if [ "$allFiles" == "true" ]; then
+	filesToAdd=$(find * -type f ! -name '.*')
+fi
+for file in $filesToAdd; do
 	### We find the last commit: (ls | sort -r | head -1) gives us the latest commit first
 	#	latest=`ls ".jsv/commit" | sort -r`
 	latest=$(ls ".jsv/commits" | sort)

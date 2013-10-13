@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 # Name: `commit`
 # Author: Jose Salvatierra (jslvtr)
@@ -47,7 +47,7 @@ else
 	### We have all the files to commit inside .jsv/stack.
 	### They belong to user who added them, and have modifier 700.
 	cd "stack"
-	filesToCommit=$(find * -type f -print)
+	filesToCommit=$(find * -type f )
 	for file in $filesToCommit; do
 		chmod 775 "$file"
 		chgrp "$groupname" "$file"
@@ -55,14 +55,14 @@ else
 	cd ".."
 	count=$(ls "commits" | wc -w)
 	cd "stack"
-	find * -type f -print0 -exec tar zcf "$tstmp.$count.tar.gz" {} +
+	find * -type f -exec tar zcf "$tstmp.$count.tar.gz" {} +
 	cd ".."
 	mv "stack/$tstmp.$count.tar.gz" "."
 	chgrp "$groupname" "$tstmp.$count.tar.gz"
 	chmod 775 "$tstmp.$count.tar.gz"
 	mv "$tstmp.$count.tar.gz" "commits"
 	rm -rf "stack"
-	echo "New commit ($output) (count:$count) :: $tstmp :: user $(whoami)" >> "log.txt"
+	echo "New commit ($output) (count:$count) :: $tstmp :: user=$(whoami)" >> "log.txt"
 	exit 0
 fi
 exit 0

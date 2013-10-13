@@ -46,7 +46,7 @@ fi
 
 askUser
 groupname=$(cat ".jsv/groupname.txt")
-if [ "$?" == "0" ]; then
+if [ "$?" != "0" ]; then
 	echo "Error getting groupname. Repository corrupted."
 	exit 3
 fi
@@ -96,8 +96,9 @@ for commit in $latest; do
 let index++
 done
 rm -rf "temp-commit"
-cd ".."
-toRemove=$(find . -maxdepth 1 ! -name '.*')
+cd "temp-struct"
+toRemove=$(find * -type f -print0 ! -name '.*')
+cd "../.."
 for tR in $toRemove; do
 	rm -rf "$tR"
 done

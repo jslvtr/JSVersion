@@ -48,6 +48,8 @@ askUser
 groupname=$(cat ".jsv/groupname.txt")
 if [ "$?" != "0" ]; then
 	echo "Error getting groupname. Repository corrupted."
+	tstmp=$(date +%s)
+	echo "Repository seems corrupted... :: $tstmp" >> ".jsv/log.txt"
 	exit 3
 fi
 

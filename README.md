@@ -10,3 +10,4 @@ Revert to a previous commit by running `revert.sh`. You will be prompted what re
 
 ## Install instructions
 IMPORTANT :: Run `init.sh` by doing this command: ". init.sh".
+If you cannot run `postinit` then you must create a file called "groupname.txt" that has inside it the group the user belongs to. This must be done before any commits.

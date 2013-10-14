@@ -1,10 +1,10 @@
-#!/bin/bash -x
+#!/bin/bash
 
 if [ ! -n "$1" ]; then
 	echo "Not enough arguments passed."
 	exit 1
 fi
-toRun="$1.sh"
+toRun="./$1"
 shift
 space=" "
 if [ "$1" == "" ]; then

@@ -54,8 +54,6 @@ else
 		touch ".jsv/log.txt"
 		echo "Logfile initialized :: $tstmp :: $PWD/.jsv" >> ".jsv/log.txt"
 	fi
-	scriptpath=$(pwd)
-	export PATH=$PATH:$scriptpath
 	echo "Repository initialised"
 	echo "Repository initialised :: $tstmp :: $PWD." >> ".jsv/log.txt"
 #	exit 0

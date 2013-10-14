@@ -21,6 +21,7 @@ fi
 
 touch ".jsv/groupname.txt"
 echo "$groupname" >> ".jsv/groupname.txt"
+
 echo "JSV installed successfully. Group $groupname created and user $newuser added." >> ".jsv/log.txt"
 echo "JSV installed successfully."
 exit 0
